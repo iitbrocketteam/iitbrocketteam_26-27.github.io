@@ -1,26 +1,47 @@
 .navbar {
+  --ink: #f2f1ee;
+  --accent: oklch(0.78 0.17 50);
+
   height: var(--navbar-height);
-  font-size: 1.4rem;
-  padding: 0.2rem 1rem;
+  padding: 0 40px;
 
   position: fixed;
   z-index: 150;
   width: 100vw;
 
-  background-color: #000000d0;
-  backdrop-filter: blur(0.6rem);
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  --link-highlight: #1768ff;
+  font-family: var(--font-geist-mono), monospace;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+
+  background-color: #0a0b0d;
+  border-bottom: 1px solid rgba(242, 241, 238, 0.14);
+  transition:
+    background-color 0.25s,
+    border-color 0.25s;
+}
+
+/* over the homepage hero, before scrolling */
+.transparent {
+  background-color: transparent;
+  border-bottom-color: transparent;
 }
 
 .logo_link {
-  height: 100%; /* of Navbar height*/
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .logo {
   width: auto;
-  height: 94%; /* of Link height */
+  height: 80%;
   transition: transform 0.1s;
 }
 
@@ -28,112 +49,86 @@
   transform: scale(1.08);
 }
 
+.subpage_link {
+  color: var(--ink);
+  transition: color 0.15s ease;
+}
+
+.subpage_link:hover,
+.active {
+  color: var(--accent);
+}
+
+.contact {
+  padding: 10px 16px;
+  border: 1px solid rgba(242, 241, 238, 0.6);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.contact:hover,
+.contact.active {
+  background-color: var(--ink);
+  color: #0a0b0d;
+}
+
 @media (min-aspect-ratio: 1/1) {
   .links {
-    position: fixed;
+    position: absolute;
+    left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%);
-    top: calc(var(--navbar-height) / 2);
-    left: 50vw;
 
     display: flex;
-    gap: 1rem;
+    gap: 36px;
   }
 
-  .mobile_active {
+  .mobile_active,
+  .mobile_only {
     display: none;
   }
 }
 
-.subpage_link {
-  text-decoration: none;
-  color: white;
-  margin: 0 0.6rem;
-  /* font-weight: lighter; */
-  position: relative;
-
-  /* https://css-irl.info/animating-underlines/ */
-  transition: color 0.1s;
-  background: none,
-    linear-gradient(to right, var(--link-highlight), var(--link-highlight));
-  background-size: 100% 0.1em, 0 0.1em;
-  background-position: 100% 100%, 0 100%;
-  background-repeat: no-repeat;
-  transition: background-size 300ms;
-}
-
-.subpage_link:hover {
-  color: var(--link-highlight);
-  background-size: 0 0.1em, 100% 0.1em;
-}
-
-/* TODO active doesn't override .links a. so made separate inactive class */
-.active {
-  background-size: 0 0.1em, 100% 0.01em;
-}
-
-.buttons {
-  display: flex;
-  gap: 1rem;
-}
-
 @media (max-aspect-ratio: 1/1) {
   .navbar {
-    font-size: 1.35rem;
+    padding: 0 20px;
+  }
+
+  .contact {
+    display: none;
   }
 
   .links {
-    width: 13ch; /* achievements */
+    min-width: 16ch;
     position: fixed;
-    right: 0.5rem;
-    justify-content: center;
+    right: 20px;
+    top: calc(var(--navbar-height) - 0.25rem);
 
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
-    background-color: rgb(33, 36, 46);
-    border-radius: 0.4rem;
-    padding: 0.4rem 0rem;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background-color: #0a0b0d;
+    border: 1px solid rgba(242, 241, 238, 0.2);
   }
 
   .mobile_active {
-    width: 15ch;
-    background-color: rgb(48, 51, 66);
-    border-radius: 0.4rem;
-    padding: 0.4rem;
-
-    position: fixed;
-    right: 0.5rem;
-    top: calc(var(--navbar-height) / 2);
-    transform: translateY(-50%);
+    min-width: 16ch;
+    padding: 10px 14px;
+    border: 1px solid rgba(242, 241, 238, 0.6);
 
     user-select: none;
     -webkit-user-select: none;
+    cursor: pointer;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.8rem;
   }
 
   .dropdown_closed {
     display: none;
   }
 }
-
-/* .reach_out {
-  padding: 0.5rem 0.8rem;
-  margin: 0rem 1.4rem;
-  border: none;
-  border-radius: 0.3rem;
-  font-weight: 700;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: background-color 0.3s, color 0.3s;
-
-  background-color: #ffffff;
-  color: #000;
-  transition: transform 100ms;
-}
-
-.reach_out:hover {
-  transform: scale(1.1);
-} */

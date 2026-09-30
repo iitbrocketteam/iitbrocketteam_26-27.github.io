@@ -6,11 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaChevronDown } from "react-icons/fa";
 // TODO add social media
-import { useState, useContext } from "react";
+import { useState, useEffect } from "react";
 // import { ThemeContext } from "./Theme";
-
-// import { Space_Mono, Poppins, Inter } from "next/font/google";
-// const font = Inter({ weight: "400", subsets: ["latin"] });
 
 // TODO add social media links as well as links to share the website
 
@@ -23,13 +20,27 @@ const links = [
   ["/contact", "Contact"],
 ];
 
+// on desktop contact is the outline button on the right, not a tab
+const cta_link = "/contact";
+
 export default function Navbar() {
   const pathname = usePathname();
   const current_link = links.find((link) => link[0] === pathname);
 
   const [dropdown_closed, set_dropdown_closed] = useState(true);
 
-  // const { theme, toggleTheme } = useContext(ThemeContext);
+  // on the homepage the navbar sits transparent over the hero photo,
+  // and gets its solid background once scrolled past it
+  const is_home = pathname === "/";
+  const [scrolled, set_scrolled] = useState(false);
+
+  useEffect(() => {
+    if (!is_home) return;
+    const on_scroll = () => set_scrolled(window.scrollY > 40);
+    on_scroll();
+    window.addEventListener("scroll", on_scroll, { passive: true });
+    return () => window.removeEventListener("scroll", on_scroll);
+  }, [is_home]);
 
   // link may not exist - eg if gonna 404
   if (!current_link) {
@@ -45,7 +56,7 @@ export default function Navbar() {
     >
       {current_link[1]}
 
-      <FaChevronDown style={{ marginLeft: "" }} />
+      <FaChevronDown />
     </div>
   );
 
@@ -56,11 +67,11 @@ export default function Navbar() {
       className={
         styles.subpage_link +
         " " +
-        (link[0] === pathname ? styles.active : styles.inactive)
+        (link[0] === pathname ? styles.active : styles.inactive) +
+        (link[0] === cta_link ? " " + styles.mobile_only : "")
       }
       onClick={() => {
         set_dropdown_closed(true);
-        console.log("hello", dropdown_closed);
       }}
     >
       {link[1]}
@@ -68,7 +79,11 @@ export default function Navbar() {
   ));
 
   return (
-    <nav className={styles.navbar /*  + ' ' + font.className */}>
+    <nav
+      className={
+        styles.navbar + (is_home && !scrolled ? " " + styles.transparent : "")
+      }
+    >
       <Link className={styles.logo_link} href="/">
         <Image
           className={styles.logo}
@@ -88,39 +103,14 @@ export default function Navbar() {
         {links_content}
       </div>
 
-      {/* <button onClick={() => toggleTheme()}>{theme}</button> */}
-
-      {/* <div className={styles.buttons}>
-        <Link className={styles.reach_out} href="/contact">
-          REACH OUT TO US
-        </Link>
-      </div> */}
-      {/* 
-      <div className={styles.buttons}>
-        <a
-          href="https://www.instagram.com/iitb.rocket.team/"
-          target="_blank"
-          className={styles.social_icon}
-        >
-          <FaInstagram />
-        </a>
-
-        <a
-          href="https://in.linkedin.com/company/iitbrocketteam"
-          target="_blank"
-          className={styles.social_icon}
-        >
-          <FaLinkedin />
-        </a>
-
-        <a
-          href="mailto:iitbrocketteam@gmail.com"
-          target="_blank"
-          className={styles.social_icon}
-        >
-          <FaEnvelope />
-        </a>
-      </div> */}
+      <Link
+        href={cta_link}
+        className={
+          styles.contact + (pathname === cta_link ? " " + styles.active : "")
+        }
+      >
+        Contact →
+      </Link>
     </nav>
   );
 }
